@@ -1,3 +1,3 @@
 # Redither_site
-visit: redither.site 
+visit: https://redither.site/
 
