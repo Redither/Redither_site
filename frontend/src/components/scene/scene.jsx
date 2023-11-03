@@ -5,10 +5,10 @@ import { Plane, useAspect, useTexture, shaderMaterial } from '@react-three/drei'
 import { EffectComposer, DepthOfField, Vignette } from '@react-three/postprocessing'
 import { MaskFunction } from 'postprocessing'
 import Fireflies from './firefliesScene.jsx'
-import bgUrl from '../../assets/img/scene/bg.jpg'
-import starsUrl from '../../assets/img/scene/stars.png'
-import groundUrl from '../../assets/img/scene/ground.png'
-import bearUrl from '../../assets/img/scene/bear.png'
+import bgUrl from '../../assets/img/scene/bgrd.png'
+import starsUrl from '../../assets/img/scene/effect.png'
+import groundUrl from '../../assets/img/scene/bgrd_top.png'
+import bearUrl from '../../assets/img/scene/object.png'
 import leaves1Url from '../../assets/img/scene/leaves1.png'
 import leaves2Url from '../../assets/img/scene/leaves2.png'
 
@@ -52,6 +52,7 @@ const LayerMaterial = shaderMaterial(
 extend({ LayerMaterial })
 
 function Experience() {
+  const scaleF = useAspect(2600, 1000, 1.05)
   const scaleN = useAspect(1600, 1000, 1.05)
   const scaleW = useAspect(2200, 1000, 1.05)
   const textures = useTexture([bgUrl, starsUrl, groundUrl, bearUrl, leaves1Url, leaves2Url])
@@ -60,12 +61,12 @@ function Experience() {
   const [movement] = useState(() => new Vector3())
   const [temp] = useState(() => new Vector3())
   const layers = [
-    { texture: textures[0], x: 0, y: 0, z: 0, factor: 0.005, scale: scaleW },
-    { texture: textures[1], x: 0, y: 0, z: 10, factor: 0.005, scale: scaleW },
-    { texture: textures[2], x: 0, y: 0, z: 20, scale: scaleW },
-    { texture: textures[3], x: 0, y: 0, z: 30, scaleFactor: 0.83, scale: scaleN },
-    { texture: textures[4], x: 0, y: 0, z: 40, factor: 0.03, scaleFactor: 1, wiggle: 0.6, scale: scaleW },
-    { texture: textures[5], x: -20, y: -20, z: 49, factor: 0.04, scaleFactor: 1.3, wiggle: 1, scale: scaleW },
+    { texture: textures[0], x: 0, y: 0, z: 0, factor: 0.05, scale: scaleF },
+    { texture: textures[1], x: 0, y: 0, z: 10, factor: 0.001, scale: scaleW },
+    { texture: textures[2], x: 0, y: 0, z: 20, factor: 0.01, scale: scaleW },
+    { texture: textures[3], x: 0, y: 0, z: 30, scaleFactor: 0.87, scale: scaleN },
+    { texture: textures[4], x: 0, y: 0, z: 40, factor: 0.5, scaleFactor: 1, wiggle: 0.6, scale: scaleW },
+    { texture: textures[5], x: -20, y: -20, z: 49, factor: 0.15, scaleFactor: 1.3, wiggle: 1, scale: scaleW },
   ]
 
   useFrame((state, delta) => {
@@ -103,8 +104,8 @@ function Effects() {
   })
   return (
     <EffectComposer disableNormalPass multisampling={0}>
-      <DepthOfField ref={ref} target={[0, 0, 30]} bokehScale={8} focalLength={0.1} width={1024} />
-      <Vignette />
+      <DepthOfField ref={ref} target={[0, 0, 30]} bokehScale={2} focalLength={0} width={1440} />
+      <Vignette softness={.3}/>
     </EffectComposer>
   )
 }
@@ -144,7 +145,7 @@ function Canvas({ children }) {
     window.addEventListener('resize', resize)
     root.current.render(children)
     return () => window.removeEventListener('resize', resize)
-  }, [])
+  }, []);
 
   return <canvas ref={canvas} style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden', display: 'block' }} />
 }
